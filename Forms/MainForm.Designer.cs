@@ -36,6 +36,8 @@
             DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             splitContainer = new SplitContainer();
+            iconButtonNextTrack = new FontAwesome.Sharp.IconButton();
+            iconButtonPreviousTrack = new FontAwesome.Sharp.IconButton();
             labelYear = new Label();
             labelFileType = new Label();
             labelTitle = new Label();
@@ -67,6 +69,8 @@
             // 
             // splitContainer.Panel1
             // 
+            splitContainer.Panel1.Controls.Add(iconButtonNextTrack);
+            splitContainer.Panel1.Controls.Add(iconButtonPreviousTrack);
             splitContainer.Panel1.Controls.Add(labelYear);
             splitContainer.Panel1.Controls.Add(labelFileType);
             splitContainer.Panel1.Controls.Add(labelTitle);
@@ -86,31 +90,59 @@
             splitContainer.SplitterDistance = 150;
             splitContainer.TabIndex = 0;
             // 
+            // iconButtonNextTrack
+            // 
+            iconButtonNextTrack.Anchor = AnchorStyles.Top;
+            iconButtonNextTrack.BackColor = Color.White;
+            iconButtonNextTrack.ForeColor = Color.White;
+            iconButtonNextTrack.IconChar = FontAwesome.Sharp.IconChar.Forward;
+            iconButtonNextTrack.IconColor = Color.Black;
+            iconButtonNextTrack.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButtonNextTrack.Location = new Point(696, 43);
+            iconButtonNextTrack.Name = "iconButtonNextTrack";
+            iconButtonNextTrack.Size = new Size(75, 55);
+            iconButtonNextTrack.TabIndex = 13;
+            iconButtonNextTrack.UseVisualStyleBackColor = false;
+            // 
+            // iconButtonPreviousTrack
+            // 
+            iconButtonPreviousTrack.Anchor = AnchorStyles.Top;
+            iconButtonPreviousTrack.BackColor = Color.White;
+            iconButtonPreviousTrack.ForeColor = Color.White;
+            iconButtonPreviousTrack.IconChar = FontAwesome.Sharp.IconChar.Backward;
+            iconButtonPreviousTrack.IconColor = Color.Black;
+            iconButtonPreviousTrack.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButtonPreviousTrack.Location = new Point(372, 43);
+            iconButtonPreviousTrack.Name = "iconButtonPreviousTrack";
+            iconButtonPreviousTrack.Size = new Size(75, 55);
+            iconButtonPreviousTrack.TabIndex = 12;
+            iconButtonPreviousTrack.UseVisualStyleBackColor = false;
+            // 
             // labelYear
             // 
             labelYear.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             labelYear.Font = new Font("Bauhaus 93", 32F, FontStyle.Bold);
             labelYear.ForeColor = Color.FromArgb(224, 224, 224);
-            labelYear.Location = new Point(968, 45);
+            labelYear.Location = new Point(980, 45);
             labelYear.Name = "labelYear";
             labelYear.Size = new Size(166, 51);
             labelYear.TabIndex = 11;
-            labelYear.TextAlign = ContentAlignment.TopRight;
+            labelYear.TextAlign = ContentAlignment.MiddleRight;
             // 
             // labelFileType
             // 
-            labelFileType.AutoSize = true;
             labelFileType.Font = new Font("Bauhaus 93", 32F, FontStyle.Bold);
             labelFileType.ForeColor = Color.FromArgb(224, 224, 224);
-            labelFileType.Location = new Point(12, 45);
+            labelFileType.Location = new Point(0, 45);
             labelFileType.Name = "labelFileType";
-            labelFileType.Size = new Size(0, 49);
+            labelFileType.Size = new Size(166, 51);
             labelFileType.TabIndex = 10;
+            labelFileType.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // labelTitle
             // 
-            labelTitle.Anchor = AnchorStyles.Top;
             labelTitle.BackColor = Color.FromArgb(64, 64, 64);
+            labelTitle.Dock = DockStyle.Top;
             labelTitle.Font = new Font("Consolas", 22F);
             labelTitle.ForeColor = Color.Chartreuse;
             labelTitle.Location = new Point(0, 0);
@@ -276,6 +308,7 @@
             DoubleBuffered = true;
             ForeColor = Color.White;
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MinimumSize = new Size(750, 200);
             Name = "MainForm";
             Text = "tTunes";
             splitContainer.Panel1.ResumeLayout(false);
@@ -304,5 +337,7 @@
         private Label labelTitle;
         private Label labelYear;
         private Label labelFileType;
+        private FontAwesome.Sharp.IconButton iconButtonPreviousTrack;
+        private FontAwesome.Sharp.IconButton iconButtonNextTrack;
     }
 }

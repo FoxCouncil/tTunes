@@ -1,5 +1,7 @@
 using LibVLCSharp;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using tTunes.Models;
 
@@ -7,10 +9,19 @@ namespace tTunes
 {
     public partial class MainForm : Form
     {
+        [DllImport("user32")]
+        public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+        const int WM_KEYDOWN = 0x100;
+        const int WM_KEYUP = 0x101;
+
         static MediaPlayer Player => tTunes.Player;
 
-        int currentSelectedIndex;
+        int currentSelectedIndex = -1;
         Color oldColor;
+        bool isPlaying;
+        bool isTrackBarInUse;
+        bool isTrackBarBeingScrolled;
 
         public MainForm()
         {
@@ -18,20 +29,67 @@ namespace tTunes
 
             libraryGridView.DataSource = libraryDataSource;
 
+            iconButtonPreviousTrack.Enabled = false;
             iconButtonPlay.Enabled = false;
             iconButtonPause.Enabled = false;
             iconButtonStop.Enabled = false;
-
-            iconButtonPlay.Click += (s, e) => ThreadPool.QueueUserWorkItem(_ => Player.Play());
-            iconButtonPause.Click += (s, e) => ThreadPool.QueueUserWorkItem(_ => Player.Pause());
-            iconButtonStop.Click += (s, e) => ThreadPool.QueueUserWorkItem(_ => Player.Stop());
-
-            libraryGridView.MouseDoubleClick += (s, e) => LibraryPlaySelection();
-            libraryGridView.KeyDown += (s, e) => HandleKeyboard(e);
+            iconButtonNextTrack.Enabled = false;
 
             KeyDown += (s, e) => HandleKeyboard(e);
 
-            Player.MediaChanged += (s, e) => InvokeIfRequired(() =>
+            iconButtonPreviousTrack.Click += (s, e) => { PreviousTrack(); ActiveControl = libraryGridView; };
+            iconButtonPlay.Click += (s, e) => { if (Player.Media == null) { LibraryPlaySelection(true); } else ThreadPool.QueueUserWorkItem(_ => Player.Play()); ActiveControl = libraryGridView; };
+            iconButtonPause.Click += (s, e) => { ThreadPool.QueueUserWorkItem(_ => Player.Pause()); ActiveControl = libraryGridView; };
+            iconButtonStop.Click += (s, e) => { ThreadPool.QueueUserWorkItem(_ => Player.Stop()); ActiveControl = libraryGridView; };
+            iconButtonNextTrack.Click += (s, e) => { NextTrack(); ActiveControl = libraryGridView; };
+
+            trackBarTime.MouseDown += (s, e) => 
+            {
+                if (s is not TrackBar trackBar)
+                {
+                    return;
+                }
+
+                int thumbWidth = GetThumbWidth(trackBar);
+                int thumbHeight = trackBar.Size.Height;
+                int thumbLeft = GetThumbLeftPosition(trackBar, thumbWidth);
+                int thumbTop = 0;
+
+                var thumbRect = new Rectangle(thumbLeft, thumbTop, thumbWidth, thumbHeight);
+
+                isTrackBarBeingScrolled = thumbRect.Contains(e.Location);
+
+                isTrackBarInUse = true; 
+            };
+            trackBarTime.MouseUp += (s, e) => 
+            {
+                if (s is not TrackBar trackBar)
+                {
+                    return;
+                }
+
+                if (isTrackBarBeingScrolled)
+                {
+                    if (Player.Time == trackBar.Value)
+                    {
+                        return;
+                    }
+
+                    var newValue = trackBar.Value;
+
+                    ThreadPool.QueueUserWorkItem(_ => Player.SeekTo(TimeSpan.FromMilliseconds(newValue), true));
+
+                    isTrackBarBeingScrolled = false;
+                }
+
+                isTrackBarInUse = false;
+            };
+            trackBarTime.KeyDown += (s, e) => HandleKeyboard(e);
+
+            libraryGridView.MouseDoubleClick += (s, e) => LibraryPlaySelection(true);
+            libraryGridView.KeyDown += (s, e) => HandleKeyboard(e);
+
+            Player.MediaChanged += (s, e) => Invoke(() =>
             {
                 if (e.Media.ParsedStatus != MediaParsedStatus.Done)
                 {
@@ -56,8 +114,10 @@ namespace tTunes
                 trackBarTime.Maximum = duration;
                 trackBarTime.Value = 0;
             });
-            Player.Playing += (s, e) => InvokeIfRequired(() =>
+            Player.Playing += (s, e) => Invoke(() =>
             {
+                isPlaying = true;
+
                 labelPlaybackStatusText.Text = "PLAYING";
 
                 iconButtonPlay.Enabled = false;
@@ -66,13 +126,19 @@ namespace tTunes
 
                 trackBarTime.Value = 0;
             });
-            Player.TimeChanged += (s, e) => InvokeIfRequired(() =>
+            Player.TimeChanged += (s, e) => Invoke(() =>
             {
                 labelTimeCurrent.Text = TimeSpan.FromMilliseconds(e.Time).ToString("mm\\:ss");
-                trackBarTime.Value = (int)Math.Clamp(e.Time, 0, trackBarTime.Maximum);
+
+                if (!isTrackBarInUse)
+                {
+                    trackBarTime.Value = (int)Math.Clamp(e.Time, 0, trackBarTime.Maximum);
+                }
             });
-            Player.Stopped += (s, e) => InvokeIfRequired(() =>
+            Player.Stopped += (s, e) => Invoke(() =>
             {
+                isPlaying = false;
+
                 labelPlaybackStatusText.Text = "STOPPED";
 
                 labelTimeCurrent.Text = "00:00";
@@ -83,8 +149,10 @@ namespace tTunes
 
                 trackBarTime.Value = 0;
             });
-            Player.Paused += (s, e) => InvokeIfRequired(() =>
+            Player.Paused += (s, e) => Invoke(() =>
             {
+                isPlaying = false;
+
                 labelPlaybackStatusText.Text = "PAUSED";
 
                 iconButtonPlay.Enabled = true;
@@ -100,7 +168,7 @@ namespace tTunes
         {
             if (e.KeyCode == Keys.Enter)
             {
-                LibraryPlaySelection();
+                LibraryPlaySelection(true);
 
                 e.Handled = true;
                 e.SuppressKeyPress = true;
@@ -113,18 +181,93 @@ namespace tTunes
             {
                 ThreadPool.QueueUserWorkItem(_ => { if (Player.IsPlaying) Player.Pause(); else Player.Play(); });
             }
+            else if (e.KeyCode == Keys.Down || e.KeyCode == Keys.Up || e.KeyCode == Keys.PageDown || e.KeyCode == Keys.PageUp)
+            {
+                if (!libraryGridView.Focused)
+                {
+                    libraryGridView.Focus();
+
+                    SendMessage(libraryGridView.Handle, WM_KEYDOWN, (IntPtr)e.KeyCode, IntPtr.Zero);
+                    SendMessage(libraryGridView.Handle, WM_KEYUP, (IntPtr)e.KeyCode, IntPtr.Zero);
+
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                }
+            }
+            else if (e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
+            {
+                var delta = trackBarTime.Value + (e.KeyCode == Keys.Left ? -1000 : 1000);
+
+                Debug.WriteLine($"V: {trackBarTime.Value} - D: {delta}");
+
+                trackBarTime.Value = delta;
+
+                ThreadPool.QueueUserWorkItem(_ => Player.SeekTo(TimeSpan.FromMilliseconds(delta), true));
+
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.N)
+            {
+                NextTrack();
+            }
+            else if (e.KeyCode == Keys.B)
+            {
+                PreviousTrack();
+            }
         }
 
-        private void LibraryPlaySelection()
+        private void NextTrack()
+        {
+            var currentIndex = libraryGridView.CurrentRow.Index;
+
+            if (currentIndex + 1 < libraryGridView.Rows.Count)
+            {
+                currentIndex += 1;
+            }
+            else
+            {
+                currentIndex = 0;
+            }
+
+            libraryGridView.CurrentCell = libraryGridView.Rows[currentIndex].Cells[0];
+            libraryGridView.Rows[currentIndex].Selected = true;
+
+            LibraryPlaySelection();
+        }
+
+        private void PreviousTrack()
+        {
+            var currentIndex = libraryGridView.CurrentRow.Index;
+
+            if (currentIndex - 1 >= 0)
+            {
+                currentIndex -= 1;
+            }
+            else
+            {
+                currentIndex = libraryGridView.Rows.Count - 1;
+            }
+
+            libraryGridView.CurrentCell = libraryGridView.Rows[currentIndex].Cells[0];
+            libraryGridView.Rows[currentIndex].Selected = true;
+
+            LibraryPlaySelection();
+        }
+
+        private void LibraryPlaySelection(bool forcePlay = false)
         {
             if (currentSelectedIndex == libraryGridView.SelectedRows[0].Index)
             {
                 return;
             }
 
-            for (int i = 0; i < libraryGridView.ColumnCount; i++)
+            if (currentSelectedIndex >= 0)
             {
-                libraryGridView[i, currentSelectedIndex].Style.BackColor = oldColor;
+                for (int i = 0; i < libraryGridView.ColumnCount; i++)
+                {
+                    libraryGridView[i, currentSelectedIndex].Style.BackColor = oldColor;
+                }
             }
 
             if (libraryGridView.SelectedRows[0].DataBoundItem is not TrackerFile trackerFile)
@@ -143,7 +286,18 @@ namespace tTunes
                 libraryGridView[i, currentSelectedIndex].Style.BackColor = Color.DarkBlue;
             }
 
-            ThreadPool.QueueUserWorkItem(_ => Player.Play(new Media(trackerFile.Path)));
+            ThreadPool.QueueUserWorkItem(_ => 
+            {
+                if (!isPlaying && !forcePlay)
+                {
+                    Player.Play(new Media(trackerFile.Path));
+                    Player.Stop();
+                }
+                else
+                {
+                    Player.Play(new Media(trackerFile.Path));
+                }
+            });
         }
 
         private void LoadTrackerLibrary(string path)
@@ -173,21 +327,30 @@ namespace tTunes
             libraryGridView.Columns[4].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
             oldColor = libraryGridView[0, 0].Style.BackColor;
+
+            libraryGridView[0, 0].Selected = true;
+
+            iconButtonPlay.Enabled = true;
+            iconButtonPreviousTrack.Enabled = true;
+            iconButtonNextTrack.Enabled = true;
         }
 
-        private void InvokeIfRequired(Action action)
+        private int GetThumbLeftPosition(TrackBar trackBar, int thumbWidth)
         {
-            if (IsDisposed)
-            {
-                return;
-            }
+            double min = trackBar.Minimum;
+            double max = trackBar.Maximum;
+            double val = trackBar.Value;
 
-            if (InvokeRequired)
-            {
-                Invoke(action);
-            }
+            int trackBarWidth = trackBar.ClientSize.Width - thumbWidth;
+            double perc = (val - min) / (max - min);
+            return (int)(perc * trackBarWidth);
+        }
 
-            action();
+        private int GetThumbWidth(TrackBar trackBar)
+        {
+            // This is a heuristic. For more precise results, custom drawing might be necessary
+            // or more sophisticated methods to get the size of the thumb.
+            return (int)(trackBar.Size.Height * 0.6);
         }
     }
 }
