@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34227.203
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tTunes", "tTunes.csproj", "{C9CF51AC-AEC8-43C9-90B6-6D9D95BCCF2E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C9CF51AC-AEC8-43C9-90B6-6D9D95BCCF2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9CF51AC-AEC8-43C9-90B6-6D9D95BCCF2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9CF51AC-AEC8-43C9-90B6-6D9D95BCCF2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9CF51AC-AEC8-43C9-90B6-6D9D95BCCF2E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0FE60D81-6D1D-4F3E-B5BC-9C6F68BE7378}
+	EndGlobalSection
+EndGlobal
