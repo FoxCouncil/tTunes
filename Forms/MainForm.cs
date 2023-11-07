@@ -18,7 +18,9 @@ namespace tTunes
         static MediaPlayer Player => tTunes.Player;
 
         int currentSelectedIndex = -1;
+
         Color oldColor;
+
         bool isPlaying;
         bool isTrackBarInUse;
         bool isTrackBarBeingScrolled;
@@ -134,7 +136,13 @@ namespace tTunes
                 {
                     trackBarTime.Value = (int)Math.Clamp(e.Time, 0, trackBarTime.Maximum);
                 }
+
+                if (e.Time >= trackBarTime.Maximum)
+                {
+                    NextTrack();
+                }
             });
+
             Player.Stopped += (s, e) => Invoke(() =>
             {
                 isPlaying = false;
