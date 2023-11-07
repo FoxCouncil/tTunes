@@ -142,7 +142,6 @@ namespace tTunes
                     NextTrack();
                 }
             });
-
             Player.Stopped += (s, e) => Invoke(() =>
             {
                 isPlaying = false;
