@@ -1,3 +1,5 @@
+name: tTunes Release
+
 on:
   push:
     tags:
