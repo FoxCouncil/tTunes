@@ -36,6 +36,8 @@
             DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             splitContainer = new SplitContainer();
+            iconButtonReloadLibrary = new FontAwesome.Sharp.IconButton();
+            iconButtonSelectDirectory = new FontAwesome.Sharp.IconButton();
             iconButtonNextTrack = new FontAwesome.Sharp.IconButton();
             iconButtonPreviousTrack = new FontAwesome.Sharp.IconButton();
             labelYear = new Label();
@@ -69,6 +71,8 @@
             // 
             // splitContainer.Panel1
             // 
+            splitContainer.Panel1.Controls.Add(iconButtonReloadLibrary);
+            splitContainer.Panel1.Controls.Add(iconButtonSelectDirectory);
             splitContainer.Panel1.Controls.Add(iconButtonNextTrack);
             splitContainer.Panel1.Controls.Add(iconButtonPreviousTrack);
             splitContainer.Panel1.Controls.Add(labelYear);
@@ -90,13 +94,47 @@
             splitContainer.SplitterDistance = 150;
             splitContainer.TabIndex = 0;
             // 
+            // iconButtonReloadLibrary
+            // 
+            iconButtonReloadLibrary.Anchor = AnchorStyles.Top;
+            iconButtonReloadLibrary.BackColor = Color.DimGray;
+            iconButtonReloadLibrary.FlatAppearance.BorderColor = Color.Black;
+            iconButtonReloadLibrary.FlatStyle = FlatStyle.Popup;
+            iconButtonReloadLibrary.ForeColor = Color.White;
+            iconButtonReloadLibrary.IconChar = FontAwesome.Sharp.IconChar.Refresh;
+            iconButtonReloadLibrary.IconColor = Color.Gainsboro;
+            iconButtonReloadLibrary.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButtonReloadLibrary.Location = new Point(291, 44);
+            iconButtonReloadLibrary.Name = "iconButtonReloadLibrary";
+            iconButtonReloadLibrary.Size = new Size(75, 55);
+            iconButtonReloadLibrary.TabIndex = 15;
+            iconButtonReloadLibrary.UseVisualStyleBackColor = false;
+            // 
+            // iconButtonSelectDirectory
+            // 
+            iconButtonSelectDirectory.Anchor = AnchorStyles.Top;
+            iconButtonSelectDirectory.BackColor = Color.DimGray;
+            iconButtonSelectDirectory.FlatAppearance.BorderColor = Color.Black;
+            iconButtonSelectDirectory.FlatStyle = FlatStyle.Popup;
+            iconButtonSelectDirectory.ForeColor = Color.White;
+            iconButtonSelectDirectory.IconChar = FontAwesome.Sharp.IconChar.Folder;
+            iconButtonSelectDirectory.IconColor = Color.Gainsboro;
+            iconButtonSelectDirectory.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButtonSelectDirectory.Location = new Point(777, 43);
+            iconButtonSelectDirectory.Name = "iconButtonSelectDirectory";
+            iconButtonSelectDirectory.Size = new Size(75, 55);
+            iconButtonSelectDirectory.TabIndex = 14;
+            iconButtonSelectDirectory.UseVisualStyleBackColor = false;
+            // 
             // iconButtonNextTrack
             // 
             iconButtonNextTrack.Anchor = AnchorStyles.Top;
-            iconButtonNextTrack.BackColor = Color.White;
+            iconButtonNextTrack.BackColor = Color.DimGray;
+            iconButtonNextTrack.FlatAppearance.BorderColor = Color.Black;
+            iconButtonNextTrack.FlatStyle = FlatStyle.Popup;
             iconButtonNextTrack.ForeColor = Color.White;
             iconButtonNextTrack.IconChar = FontAwesome.Sharp.IconChar.Forward;
-            iconButtonNextTrack.IconColor = Color.Black;
+            iconButtonNextTrack.IconColor = Color.Gainsboro;
             iconButtonNextTrack.IconFont = FontAwesome.Sharp.IconFont.Auto;
             iconButtonNextTrack.Location = new Point(696, 43);
             iconButtonNextTrack.Name = "iconButtonNextTrack";
@@ -107,10 +145,12 @@
             // iconButtonPreviousTrack
             // 
             iconButtonPreviousTrack.Anchor = AnchorStyles.Top;
-            iconButtonPreviousTrack.BackColor = Color.White;
+            iconButtonPreviousTrack.BackColor = Color.DimGray;
+            iconButtonPreviousTrack.FlatAppearance.BorderColor = Color.Black;
+            iconButtonPreviousTrack.FlatStyle = FlatStyle.Popup;
             iconButtonPreviousTrack.ForeColor = Color.White;
             iconButtonPreviousTrack.IconChar = FontAwesome.Sharp.IconChar.Backward;
-            iconButtonPreviousTrack.IconColor = Color.Black;
+            iconButtonPreviousTrack.IconColor = Color.Gainsboro;
             iconButtonPreviousTrack.IconFont = FontAwesome.Sharp.IconFont.Auto;
             iconButtonPreviousTrack.Location = new Point(372, 43);
             iconButtonPreviousTrack.Name = "iconButtonPreviousTrack";
@@ -142,6 +182,7 @@
             // labelTitle
             // 
             labelTitle.BackColor = Color.FromArgb(64, 64, 64);
+            labelTitle.BorderStyle = BorderStyle.Fixed3D;
             labelTitle.Dock = DockStyle.Top;
             labelTitle.Font = new Font("Consolas", 22F);
             labelTitle.ForeColor = Color.Chartreuse;
@@ -155,6 +196,7 @@
             // 
             labelTimeTotal.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             labelTimeTotal.AutoSize = true;
+            labelTimeTotal.BackColor = Color.Transparent;
             labelTimeTotal.Location = new Point(1095, 132);
             labelTimeTotal.Name = "labelTimeTotal";
             labelTimeTotal.Size = new Size(48, 18);
@@ -165,6 +207,7 @@
             // labelTimeCurrent
             // 
             labelTimeCurrent.AutoSize = true;
+            labelTimeCurrent.BackColor = Color.Transparent;
             labelTimeCurrent.Location = new Point(3, 132);
             labelTimeCurrent.Name = "labelTimeCurrent";
             labelTimeCurrent.Size = new Size(48, 18);
@@ -174,10 +217,12 @@
             // iconButtonPause
             // 
             iconButtonPause.Anchor = AnchorStyles.Top;
-            iconButtonPause.BackColor = Color.White;
+            iconButtonPause.BackColor = Color.DimGray;
+            iconButtonPause.FlatAppearance.BorderColor = Color.Black;
+            iconButtonPause.FlatStyle = FlatStyle.Popup;
             iconButtonPause.ForeColor = Color.White;
             iconButtonPause.IconChar = FontAwesome.Sharp.IconChar.Pause;
-            iconButtonPause.IconColor = Color.Black;
+            iconButtonPause.IconColor = Color.Gainsboro;
             iconButtonPause.IconFont = FontAwesome.Sharp.IconFont.Auto;
             iconButtonPause.Location = new Point(534, 43);
             iconButtonPause.Name = "iconButtonPause";
@@ -188,10 +233,12 @@
             // iconButtonStop
             // 
             iconButtonStop.Anchor = AnchorStyles.Top;
-            iconButtonStop.BackColor = Color.White;
+            iconButtonStop.BackColor = Color.DimGray;
+            iconButtonStop.FlatAppearance.BorderColor = Color.Black;
+            iconButtonStop.FlatStyle = FlatStyle.Popup;
             iconButtonStop.ForeColor = Color.White;
             iconButtonStop.IconChar = FontAwesome.Sharp.IconChar.Stop;
-            iconButtonStop.IconColor = Color.Black;
+            iconButtonStop.IconColor = Color.Gainsboro;
             iconButtonStop.IconFont = FontAwesome.Sharp.IconFont.Auto;
             iconButtonStop.Location = new Point(615, 43);
             iconButtonStop.Name = "iconButtonStop";
@@ -202,10 +249,12 @@
             // iconButtonPlay
             // 
             iconButtonPlay.Anchor = AnchorStyles.Top;
-            iconButtonPlay.BackColor = Color.White;
+            iconButtonPlay.BackColor = Color.DimGray;
+            iconButtonPlay.FlatAppearance.BorderColor = Color.Black;
+            iconButtonPlay.FlatStyle = FlatStyle.Popup;
             iconButtonPlay.ForeColor = Color.White;
             iconButtonPlay.IconChar = FontAwesome.Sharp.IconChar.Play;
-            iconButtonPlay.IconColor = Color.Black;
+            iconButtonPlay.IconColor = Color.Gainsboro;
             iconButtonPlay.IconFont = FontAwesome.Sharp.IconFont.Auto;
             iconButtonPlay.Location = new Point(453, 43);
             iconButtonPlay.Name = "iconButtonPlay";
@@ -216,6 +265,7 @@
             // labelPlaybackStatusText
             // 
             labelPlaybackStatusText.Anchor = AnchorStyles.Top;
+            labelPlaybackStatusText.BackColor = Color.Transparent;
             labelPlaybackStatusText.Font = new Font("Consolas", 14F, FontStyle.Regular, GraphicsUnit.Point, 0);
             labelPlaybackStatusText.ImageAlign = ContentAlignment.TopCenter;
             labelPlaybackStatusText.Location = new Point(455, 128);
@@ -251,9 +301,9 @@
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = Color.Black;
             dataGridViewCellStyle2.Font = new Font("Consolas", 11F);
-            dataGridViewCellStyle2.ForeColor = Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(0, 192, 0);
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.ForeColor = Color.Gainsboro;
+            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(64, 64, 64);
+            dataGridViewCellStyle2.SelectionForeColor = Color.Gainsboro;
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
             libraryGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             libraryGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -267,6 +317,7 @@
             libraryGridView.DefaultCellStyle = dataGridViewCellStyle3;
             libraryGridView.Dock = DockStyle.Fill;
             libraryGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
+            libraryGridView.EnableHeadersVisualStyles = false;
             libraryGridView.GridColor = Color.Red;
             libraryGridView.Location = new Point(0, 0);
             libraryGridView.MultiSelect = false;
@@ -285,6 +336,7 @@
             dataGridViewCellStyle5.ForeColor = Color.White;
             dataGridViewCellStyle5.SelectionBackColor = Color.FromArgb(0, 192, 0);
             libraryGridView.RowsDefaultCellStyle = dataGridViewCellStyle5;
+            libraryGridView.ScrollBars = ScrollBars.Vertical;
             libraryGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             libraryGridView.ShowCellErrors = false;
             libraryGridView.ShowCellToolTips = false;
@@ -308,7 +360,7 @@
             DoubleBuffered = true;
             ForeColor = Color.White;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            MinimumSize = new Size(750, 200);
+            MinimumSize = new Size(850, 200);
             Name = "MainForm";
             Text = "tTunes";
             splitContainer.Panel1.ResumeLayout(false);
@@ -339,5 +391,7 @@
         private Label labelFileType;
         private FontAwesome.Sharp.IconButton iconButtonPreviousTrack;
         private FontAwesome.Sharp.IconButton iconButtonNextTrack;
+        private FontAwesome.Sharp.IconButton iconButtonReloadLibrary;
+        private FontAwesome.Sharp.IconButton iconButtonSelectDirectory;
     }
 }

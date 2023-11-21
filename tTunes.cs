@@ -8,7 +8,7 @@ internal static class tTunes
 #pragma warning disable CS8618 // Only null for LibVLC to load its libs
     public static LibVLC LibVLC;
     public static MediaPlayer Player;
-#pragma warning restore CS8618 
+#pragma warning restore CS8618
 
     [STAThread]
     static void Main()
@@ -34,6 +34,7 @@ internal static class tTunes
     private static void ConfigureServices(IServiceCollection services)
     {
         // services.AddTransient<>();
+        services.AddScoped<Config>();
         services.AddScoped<MainForm>();
     }
 }
