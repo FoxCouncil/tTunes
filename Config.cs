@@ -22,14 +22,14 @@ public class Config
 
         Path = System.IO.Path.Combine(directory, Name);
 
+        Settings = new()
+        {
+            Directory = directory,
+            SelectionIndex = 0
+        };
+
         if (!File.Exists(Path))
         {
-            Settings = new()
-            {
-                Directory = directory,
-                SelectionIndex = 0
-            };
-
             Save();
         }
         else
