@@ -8,7 +8,7 @@ on:
 
 env:
   PROJECT_PATH: tTunes.csproj
-  EXE_PATH: bin/Release/net8.0-windows/win-x64/publish/*.*
+  EXE_PATH: bin/Release/net8.0-windows/win-x64/publish/
   ZIP_PATH: bin/Release/net8.0-windows/win-x64/publish/tTunes-Portable.zip  
   
 jobs:
@@ -30,9 +30,10 @@ jobs:
         run: dotnet publish -c Release --self-contained -r win-x64 -p:PublishSingleFile=true --no-restore
 
       - name: Create Zip File
-        uses: papeloto/action-zip@v1
+        uses: vimtor/action-zip@v1.1
         with:
           files: ${{ env.EXE_PATH }}
+          recursive: true
           dest: ${{ env.ZIP_PATH }}
           
       - name: Initialize Release
