@@ -5,6 +5,8 @@ namespace tTunes;
 
 internal static class tTunes
 {
+    static readonly string[] SizeSuffixes = ["bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+
 #pragma warning disable CS8618 // Only null for LibVLC to load its libs
     public static LibVLC LibVLC;
     public static MediaPlayer Player;
@@ -36,5 +38,25 @@ internal static class tTunes
         // services.AddTransient<>();
         services.AddScoped<Config>();
         services.AddScoped<MainForm>();
+    }
+
+    public static string SizeSuffix(this ulong value, int decimalPlaces = 1)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(decimalPlaces);
+
+        if (value == 0) { 
+            return string.Format("{0:n" + decimalPlaces + "} bytes", 0); 
+        }
+
+        var mag = (int)Math.Log(value, 1024);
+        var adjustedSize = (decimal)value / (1L << (mag * 10));
+
+        if (Math.Round(adjustedSize, decimalPlaces) >= 1000)
+        {
+            mag += 1;
+            adjustedSize /= 1024;
+        }
+
+        return string.Format("{0:n" + decimalPlaces + "} {1}", adjustedSize, SizeSuffixes[mag]);
     }
 }

@@ -18,16 +18,17 @@ Eggshell
 
 | Key     | Action            |
 |--------:|-------------------|
-| ESCAPE  | Stop              |
-| ENTER   | Play              |
-| SPACE   | Pause             |
-| UP/DN   | Grid Up/Down      |
-| LF/RT   | Skip Back/Fwd     |
-| PgDN/UP | Page Up/Down      |
-| PERIOD  | Next Track        |
-| COMMA   | Prev Track        |
-| LETTERS | Goto First Letter |
-| F1/?    | Help              |
+| **ESCAPE**  | Stop              |
+| **ENTER**   | Play              |
+| **SPACE**   | Pause             |
+| **UP/DN**   | Grid Up/Down      |
+| **LF/RT**   | Skip Back/Fwd     |
+| **PgDN/UP** | Page Up/Down      |
+| **PERIOD**  | Next Track        |
+| **COMMA**   | Prev Track        |
+| **LETTERS** | Goto First Letter |
+| **F1/?**    | Help              |
+| **F3**      | Search            |
 
 ## Dependency
 - .NET 8

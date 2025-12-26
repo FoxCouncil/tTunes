@@ -2,32 +2,25 @@
 
 namespace tTunes.Models;
 
-internal class TrackerFile
+internal class TrackerFile(string path)
 {
     static LibVLC LibVLC => tTunes.LibVLC;
 
-    internal string Path { get; }
+    internal string Path { get; } = path;
 
     internal long Duration { get; }
 
     public string Title => GetTitle();
 
-    public string Name { get; }
+    public string Name { get; } = path.Split('\\').Last().Split(".").First();
 
-    public string Year { get; private set; }
+    public string Year { get; private set; } = "0";
 
-    public string Time { get; private set; }
+    public string Time { get; private set; } = "00:00:00";
 
-    public string Type { get; }
+    public string Size { get; private set; } = "0";
 
-    public TrackerFile(string path)
-    {
-        Path = path;
-        Name = path.Split('\\').Last().Split(".").First();
-        Type = path.Split(".").Last().ToUpper();
-        Year = "0";
-        Time = "00:00:00";
-    }
+    public string Type { get; } = path.Split(".").Last().ToUpper();
 
     public string GetTitle()
     {
@@ -42,6 +35,10 @@ internal class TrackerFile
         var dateTime = DateTimeOffset.FromUnixTimeSeconds((long)date);
 
         Year = dateTime.Year.ToString();
+
+        media.FileStat(FileStat.Size, out var size);
+
+        Size = size.SizeSuffix();
 
         return media.Meta(MetadataType.Title) ?? "N/A";
     }
